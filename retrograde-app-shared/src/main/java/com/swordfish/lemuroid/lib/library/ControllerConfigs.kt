@@ -410,6 +410,7 @@ object ControllerConfigs {
             R.string.controller_default,
             TouchControllerID.PCFX,
             mergeDPADAndLeftStickEvents = true,
+            libretroId = 1, // RETRO_DEVICE_JOYPAD - explicitly force joypad mode
             tiltConfigurations =
                 listOf(
                     TILT_CONFIGURATION_DISABLED,
