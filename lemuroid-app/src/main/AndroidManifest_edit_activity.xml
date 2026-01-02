@@ -1,0 +1,9 @@
+<![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <activity
+            android:name=".app.mobile.feature.gamemenu.TouchControlsEditActivity"
+            android:theme="@style/Theme.AppCompat.Translucent"
+            android:exported="false" />
+    </application>
+</manifest>]]>
