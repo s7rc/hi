@@ -36,6 +36,7 @@ fun LemuroidControlAnalog(
             ControlAnalog(
                 id = id,
                 analogPressId = analogPressId,
+                trackPointers = false,
                 background = {
                     Box(
                         modifier = Modifier.fillMaxSize(),
@@ -73,6 +74,7 @@ fun LemuroidControlAnalog(
                 ControlAnalog(
                     id = id,
                     analogPressId = analogPressId,
+                    trackPointers = false,
                     background = {
                         Box(
                             modifier = Modifier.fillMaxSize(),
