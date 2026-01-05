@@ -43,7 +43,10 @@ dependencies {
     implementation(deps.libs.kotlin.serialization)
     implementation(deps.libs.kotlin.serializationJson)
 
-    api(deps.libs.padkit)
+
+    // Use local modified PadKit instead of published version
+    api(project(":padkit"))
+    // api(deps.libs.padkit)  // Original published version
     api(deps.libs.collectionsImmutable)
 
     implementation(kotlin(deps.libs.kotlin.stdlib))
