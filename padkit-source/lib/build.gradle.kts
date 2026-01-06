@@ -1,105 +1,51 @@
-import com.vanniktech.maven.publish.SonatypeHost
-
 plugins {
-    alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.compose)
-    alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.maven.publish)
-    alias(libs.plugins.dokka)
-    alias(libs.plugins.git.version)
-}
-
-kotlin {
-    androidTarget {
-        publishLibraryVariants("release")
-    }
-
-    jvm("desktop")
-
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64(),
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "lib"
-            isStatic = true
-        }
-    }
-
-    sourceSets {
-        commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.materialIconsExtended)
-
-            implementation(libs.kotlinx.collections.immutable)
-            implementation(libs.kotlinx.datetime)
-        }
-    }
+    id("com.android.library")
+    id("kotlin-android")
+    id("org.jetbrains.kotlin.plugin.compose")
 }
 
 android {
-    compileSdk = (findProperty("android.compileSdk") as String).toInt()
+    compileSdk = deps.android.compileSdkVersion
     namespace = "gg.padkit.lib"
 
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-    sourceSets["main"].res.srcDirs("src/androidMain/res")
-    sourceSets["main"].resources.srcDirs("src/commonMain/resources")
-
     defaultConfig {
-        minSdk = (findProperty("android.minSdk") as String).toInt()
+        minSdk = deps.android.minSdkVersion
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlin {
-        jvmToolchain(17)
+
+    kotlinOptions {
+        jvmTarget = "17"
     }
+
     buildFeatures {
         compose = true
     }
-}
 
-val gitVersion: groovy.lang.Closure<String> by extra
-version = gitVersion()
+    composeOptions {
+        kotlinCompilerExtensionVersion = deps.versions.kotlinExtension
+    }
 
-mavenPublishing {
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = true)
-    signAllPublications()
-    coordinates("io.github.swordfish90", "padkit", version.toString())
-
-    pom {
-        name.set(project.name)
-        description.set("A virtual gamepad library for Jetpack Compose.")
-        inceptionYear.set("2024")
-        url.set("https://github.com/Swordfish90/PadKit/")
-        licenses {
-            license {
-                name.set("The Apache License, Version 2.0")
-                url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-                distribution.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-            }
-        }
-        developers {
-            developer {
-                id.set("Filippo Scognamiglio")
-                name.set("Filippo Scognamiglio")
-                url.set("https://github.com/Swordfish90/")
-            }
-        }
-        scm {
-            url.set("https://github.com/Swordfish90/PadKit")
-            connection.set("scm:git:git://github.com/Swordfish90/PadKit.git")
-            developerConnection.set("scm:git:ssh://git@github.com/Swordfish90/PadKit.git")
+    sourceSets {
+        getByName("main") {
+            manifest.srcFile("src/androidMain/AndroidManifest.xml")
+            res.srcDirs("src/androidMain/res")
+            resources.srcDirs("src/commonMain/resources")
+            java.srcDirs("src/commonMain/kotlin", "src/androidMain/kotlin")
         }
     }
 }
 
-composeCompiler {
-    reportsDestination = layout.buildDirectory.dir("compose_compiler")
-    metricsDestination = layout.buildDirectory.dir("compose_compiler")
+dependencies {
+    implementation(platform(deps.libs.androidx.compose.composeBom))
+    implementation(deps.libs.androidx.compose.runtime)
+    implementation(deps.libs.androidx.compose.foundation)
+    implementation(deps.libs.androidx.compose.material3)
+    implementation(deps.libs.androidx.compose.materialIconsExtended)
+    
+    implementation(deps.libs.collectionsImmutable)
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
 }
