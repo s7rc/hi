@@ -1,19 +1,10 @@
 #include <stdarg.h>
 #include <string.h>
+#include <math.h>
 
 #ifdef _MSC_VER
 #include <compat/msvc.h>
 #endif
-
-#include <stdint.h>
-#include <string.h>
-#include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
-
-#include <android/log.h>
-#define LOG_TAG "PCFX_DEBUG"
-#define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
 
 #include <string/stdstring.h>
 #include <retro_timers.h>
@@ -1382,11 +1373,8 @@ bool retro_load_game(const struct retro_game_info *info)
    deint.ClearState();
 #endif
 
-   for (unsigned i = 0; i < MAX_PLAYERS; i++) {
-        input_type[i] = RETRO_DEVICE_JOYPAD; // Force default
-        FXINPUT_SetInput(i, "gamepad", &input_buf[i]);
-        // LOGI("retro_init: Port %d initialized as gamepad", i);
-   }
+   for (unsigned i = 0; i < MAX_PLAYERS; i++)
+      FXINPUT_SetInput(i, "gamepad", &input_buf[i]);
 
    SoundBox_SetSoundRate(44100.0);
 
@@ -1408,70 +1396,68 @@ void retro_unload_game(void)
    disc_clear();
 }
 
-// #include <android/log.h>
-// #define LOG_TAG "PCFX_DEBUG"
-// #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
-
 static void update_input(void)
 {
-   // LOGI("update_input: Called. Frame start.");
    input_buf[0] = input_buf[1] = 0;
    static unsigned map[] = {
-      // CORRECT MAP (Derived from gamepad.cpp PCFX_GamepadIDII)
-      // Bit 0: UP, 1: DOWN, 2: LEFT, 3: RIGHT
-      // Bit 4: SELECT, 5: RUN
-      // Bit 6: IV, 7: V, 8: VI, 9: III, 10: II, 11: I
-      // Bit 12: MODE1, 14: MODE2
-      
-      RETRO_DEVICE_ID_JOYPAD_UP,     // 0
-      RETRO_DEVICE_ID_JOYPAD_DOWN,   // 1
-      RETRO_DEVICE_ID_JOYPAD_LEFT,   // 2
-      RETRO_DEVICE_ID_JOYPAD_RIGHT,  // 3
-      RETRO_DEVICE_ID_JOYPAD_SELECT, // 4
-      RETRO_DEVICE_ID_JOYPAD_START,  // 5 (RUN)
-      RETRO_DEVICE_ID_JOYPAD_Y,      // 6 (IV)
-      RETRO_DEVICE_ID_JOYPAD_L,      // 7 (V)
-      RETRO_DEVICE_ID_JOYPAD_R,      // 8 (VI)
-      RETRO_DEVICE_ID_JOYPAD_X,      // 9 (III)
-      RETRO_DEVICE_ID_JOYPAD_B,      // 10 (II)
-      RETRO_DEVICE_ID_JOYPAD_A,      // 11 (I)
-      RETRO_DEVICE_ID_JOYPAD_L2,     // 12 (MODE 1)
-      0,                             // 13
-      RETRO_DEVICE_ID_JOYPAD_R2,     // 14 (MODE 2)
+      RETRO_DEVICE_ID_JOYPAD_A,
+      RETRO_DEVICE_ID_JOYPAD_B,
+      RETRO_DEVICE_ID_JOYPAD_X,
+      RETRO_DEVICE_ID_JOYPAD_Y,
+      RETRO_DEVICE_ID_JOYPAD_L,
+      RETRO_DEVICE_ID_JOYPAD_R,
+      RETRO_DEVICE_ID_JOYPAD_SELECT,
+      RETRO_DEVICE_ID_JOYPAD_START,
+      RETRO_DEVICE_ID_JOYPAD_UP,
+      RETRO_DEVICE_ID_JOYPAD_RIGHT,
+      RETRO_DEVICE_ID_JOYPAD_DOWN,
+      RETRO_DEVICE_ID_JOYPAD_LEFT,
+      RETRO_DEVICE_ID_JOYPAD_L2,
+      0,
+      RETRO_DEVICE_ID_JOYPAD_R2,
    };
 
    for (unsigned j = 0; j < MAX_PLAYERS; j++)
    {
-      LOGI("update_input: checking player %d, type %d", j, input_type[j]);
-      if (input_type[j] == RETRO_DEVICE_JOYPAD)
+      switch (input_type[j])
       {
-         // LOGI("Player %d: Joypad Update. Bitmasks Supported: %d", j, libretro_supports_bitmasks);
-         if (libretro_supports_bitmasks)
-         {
-            input_buf[j] = input_state_cb(j, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_MASK);
-            // LOGI("Player %d (Bitmasks): Input Buf = %04x", j, input_buf[j]);
-         }
-         else
-         {
-            for (unsigned k = 0; k < 15; k++)
+         case RETRO_DEVICE_JOYPAD:
+            if (libretro_supports_bitmasks)
             {
-               if (input_state_cb(j, RETRO_DEVICE_JOYPAD, 0, map[k]))
-                  input_buf[j] |= (1 << k);
+               int16_t ret = input_state_cb(j, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_MASK);
+               for (unsigned i = 0; i < MAX_BUTTONS; i++)
+                  input_buf[j] |= (map[i] != -1u) &&
+                     (ret & (1 << map[i])) ? (1 << i) : 0;
             }
-            LOGI("Player %d (Legacy): Input Buf = %04x", j, input_buf[j]);
-         }
-      }
-      else if (input_type[j] == RETRO_DEVICE_MOUSE)
-      {
-          int16_t x = input_state_cb(j, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
-          int16_t y = input_state_cb(j, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
-          int16_t l = input_state_cb(j, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_LEFT);
-          int16_t r = input_state_cb(j, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_RIGHT);
-          mousedata[j][0] = (int16)(x * mouse_sensitivity);
-          mousedata[j][1] = (int16)(y * mouse_sensitivity);
-          mousedata[j][2] = 0;
-          if(l) mousedata[j][2] |= 1;
-          if(r) mousedata[j][2] |= 2;
+            else
+            {
+               for (unsigned i = 0; i < MAX_BUTTONS; i++)
+                  input_buf[j] |= (map[i] != -1u) &&
+                     (input_state_cb(j, RETRO_DEVICE_JOYPAD, 0, i)) ? (1 << i) : 0;
+            }
+#ifdef MSB_FIRST
+            union {
+               uint8_t b[2];
+               uint16_t s;
+            } u;
+            u.s = input_buf[j];
+            input_buf[j] = u.b[0] | u.b[1] << 8;
+#endif
+            break;
+         case RETRO_DEVICE_MOUSE:
+            mousedata[j][2] = 0;
+
+            int16 _x = input_state_cb(j, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
+            int16 _y = input_state_cb(j, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
+
+            mousedata[j][0] = (int16)roundf(_x * mouse_sensitivity);
+            mousedata[j][1] = (int16)roundf(_y * mouse_sensitivity);
+
+            if (input_state_cb(j, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_LEFT))
+               mousedata[j][2] |= (1 << 0);
+            if (input_state_cb(j, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_RIGHT))
+               mousedata[j][2] |= (1 << 1);
+            break;
       }
    }
 }
@@ -1489,7 +1475,6 @@ void update_geometry(unsigned width, unsigned height)
 
 void retro_run(void)
 {
-   // LOGI("retro_run: frame start");
    input_poll_cb();
 
    update_input();
@@ -1611,7 +1596,6 @@ void retro_set_controller_port_device(unsigned in_port, unsigned device)
 {
    if (in_port < MAX_PLAYERS)
    {
-      // LOGI("retro_set_controller_port_device: Port %d set to device %d", in_port, device);
       switch(device)
       {
          case RETRO_DEVICE_JOYPAD:
@@ -1650,10 +1634,10 @@ void retro_set_environment(retro_environment_t cb)
       &libretro_supports_option_categories);
    environ_cb(RETRO_ENVIRONMENT_SET_CONTROLLER_INFO, (void*)ports);
 
-   /* vfs_iface_info.required_interface_version = 2;
+   vfs_iface_info.required_interface_version = 2;
    vfs_iface_info.iface                      = NULL;
    if (environ_cb(RETRO_ENVIRONMENT_GET_VFS_INTERFACE, &vfs_iface_info))
-      filestream_vfs_init(&vfs_iface_info); */
+      filestream_vfs_init(&vfs_iface_info);
 }
 
 void retro_set_audio_sample(retro_audio_sample_t cb)

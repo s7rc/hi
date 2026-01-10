@@ -35,6 +35,5 @@ LOCAL_SRC_FILES    := $(SOURCES_CXX) $(SOURCES_C)
 LOCAL_CFLAGS       := $(COREFLAGS)
 LOCAL_CXXFLAGS     := $(COREFLAGS)
 LOCAL_LDFLAGS      := -Wl,-version-script=$(CORE_DIR)/link.T
-LOCAL_LDLIBS       := -llog
 LOCAL_CPP_FEATURES := exceptions
 include $(BUILD_SHARED_LIBRARY)
