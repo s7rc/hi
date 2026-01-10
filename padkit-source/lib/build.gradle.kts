@@ -34,10 +34,18 @@ android {
             manifest.srcFile("src/androidMain/AndroidManifest.xml")
             res.srcDirs("src/androidMain/res")
             resources.srcDirs("src/commonMain/resources")
-            java.srcDirs("src/commonMain/kotlin", "src/androidMain/kotlin")
-            
-            // Exclude haptics - uses multiplatform expect/actual
-            java.exclude("**/haptics/**")
+            // Only include the directories we need, skip haptics
+            java.setSrcDirs(listOf(
+                "src/commonMain/kotlin/gg/padkit/controls",
+                "src/commonMain/kotlin/gg/padkit/handlers",
+                "src/commonMain/kotlin/gg/padkit/ids",
+                "src/commonMain/kotlin/gg/padkit/inputstate",
+                "src/commonMain/kotlin/gg/padkit/inputevents",
+                "src/commonMain/kotlin/gg/padkit/layouts",
+                "src/commonMain/kotlin/gg/padkit/ui",
+                "src/commonMain/kotlin/gg/padkit/utils",
+                "src/androidMain/kotlin"
+            ))
         }
     }
 }
