@@ -112,19 +112,37 @@ fun CustomizableControl(
                                 val pointerCount = event.changes.size
                                 
                                 if (pointerCount >= 2) {
-                                    // Two+ fingers: use pinch to scale
+                                    // Two+ fingers: use pinch to scale OR vertical swipe to scale
                                     val zoomChange = event.calculateZoom()
                                     val panChange = event.calculatePan()
+                                    
+                                    // Track average Y position for vertical swipe detection
+                                    val avgY = event.changes.map { it.position.y }.average().toFloat()
+                                    if (initialSingleFingerY == null) {
+                                        initialSingleFingerY = avgY
+                                    }
+                                    
+                                    val verticalDelta = avgY - (initialSingleFingerY ?: avgY)
                                     
                                     if (zoomChange != 1f || panChange != androidx.compose.ui.geometry.Offset.Zero) {
                                         localOffsetX += panChange.x
                                         localOffsetY += panChange.y
-                                        localScale = (localScale * zoomChange).coerceIn(0.5f, 2.5f)
+                                        
+                                        // Apply pinch zoom if detected
+                                        if (kotlin.math.abs(zoomChange - 1f) > 0.01f) {
+                                            localScale = (localScale * zoomChange).coerceIn(0.5f, 2.5f)
+                                        } 
+                                        // Otherwise, check for vertical swipe to scale
+                                        else if (kotlin.math.abs(verticalDelta) > 10f) {
+                                            val scaleSensitivity = 0.001f
+                                            val scaleChange = 1f + (verticalDelta * scaleSensitivity)
+                                            localScale = (localScale * scaleChange).coerceIn(0.5f, 2.5f)
+                                        }
+                                        
                                         dirty = true
                                     }
                                     
-                                    // Reset single-finger tracking when second finger touches
-                                    initialSingleFingerY = null
+                                    // Reset for next gesture
                                     accumulatedVerticalSwipe = 0f
                                 } else if (pointerCount == 1) {
                                     // Single finger: move button, swipe vertically to scale
@@ -140,19 +158,19 @@ fun CustomizableControl(
                                     val currentY = pointer.position.y
                                     val verticalDelta = currentY - (initialSingleFingerY ?: currentY)
                                     
-                                    // Accumulate vertical swipe for scaling
-                                    // Every 100 pixels of vertical swipe = 0.1 scale change
-                                    val scaleSensitivity = 0.001f // 0.1 scale per 100px
-                                    accumulatedVerticalSwipe = verticalDelta
-                                    val scaleChange = 1f - (accumulatedVerticalSwipe * scaleSensitivity)
-                                    
                                     if (panChange != androidx.compose.ui.geometry.Offset.Zero) {
-                                        // Apply horizontal movement to offset
+                                        // Always apply movement
                                         localOffsetX += panChange.x
                                         localOffsetY += panChange.y
                                         
-                                        // Apply vertical swipe to scale (swipe down = smaller, swipe up = larger)
-                                        localScale = (localScale * scaleChange).coerceIn(0.5f, 2.5f)
+                                        // Only apply scale if significant vertical swipe (>10px threshold)
+                                        if (kotlin.math.abs(verticalDelta) > 10f) {
+                                            // Every 100 pixels of vertical swipe = 0.1 scale change
+                                            val scaleSensitivity = 0.001f
+                                            accumulatedVerticalSwipe = verticalDelta
+                                            val scaleChange = 1f + (accumulatedVerticalSwipe * scaleSensitivity)
+                                            localScale = (localScale * scaleChange).coerceIn(0.5f, 2.5f)
+                                        }
                                         
                                         dirty = true
                                     }

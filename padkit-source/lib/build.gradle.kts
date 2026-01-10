@@ -42,9 +42,7 @@ android {
 dependencies {
     implementation(platform(deps.libs.androidx.compose.composeBom))
     implementation(deps.libs.androidx.compose.runtime)
-    implementation(deps.libs.androidx.compose.foundation)
     implementation(deps.libs.androidx.compose.material3)
-    implementation(deps.libs.androidx.compose.materialIconsExtended)
     
     implementation(deps.libs.collectionsImmutable)
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
