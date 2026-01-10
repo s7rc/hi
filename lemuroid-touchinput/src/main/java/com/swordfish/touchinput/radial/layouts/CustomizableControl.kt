@@ -112,38 +112,38 @@ fun CustomizableControl(
                                 val pointerCount = event.changes.size
                                 
                                 if (pointerCount >= 2) {
-                                    // Two+ fingers: use pinch to scale OR vertical swipe to scale
+                                    // Two fingers: pinch to scale OR anchor finger + swipe other to scale
                                     val zoomChange = event.calculateZoom()
                                     val panChange = event.calculatePan()
                                     
-                                    // Track average Y position for vertical swipe detection
-                                    val avgY = event.changes.map { it.position.y }.average().toFloat()
+                                    // Track first finger's Y position (anchor point)
+                                    val firstFingerY = event.changes.first().position.y
                                     if (initialSingleFingerY == null) {
-                                        initialSingleFingerY = avgY
+                                        initialSingleFingerY = firstFingerY
                                     }
                                     
-                                    val verticalDelta = avgY - (initialSingleFingerY ?: avgY)
+                                    // Calculate second finger's vertical movement for anchor+swipe
+                                    val secondFingerY = if (event.changes.size >= 2) event.changes[1].position.y else firstFingerY
+                                    val swipeDelta = secondFingerY - firstFingerY
                                     
                                     if (zoomChange != 1f || panChange != androidx.compose.ui.geometry.Offset.Zero) {
+                                        // Always apply pan for repositioning
                                         localOffsetX += panChange.x
                                         localOffsetY += panChange.y
                                         
-                                        // Apply pinch zoom if detected
+                                        // Priority 1: Use pinch if detected
                                         if (kotlin.math.abs(zoomChange - 1f) > 0.01f) {
                                             localScale = (localScale * zoomChange).coerceIn(0.5f, 2.5f)
-                                        } 
-                                        // Otherwise, check for vertical swipe to scale
-                                        else if (kotlin.math.abs(verticalDelta) > 10f) {
-                                            val scaleSensitivity = 0.001f
-                                            val scaleChange = 1f + (verticalDelta * scaleSensitivity)
-                                            localScale = (localScale * scaleChange).coerceIn(0.5f, 2.5f)
+                                        }
+                                        // Priority 2: Use anchor+swipe if significant vertical distance
+                                        else if (kotlin.math.abs(swipeDelta) > 50f) {
+                                            // Swipe up = bigger, swipe down = smaller
+                                            val scaleFactor = 1f + (swipeDelta / 500f)  // 500px swipe = 2x scale
+                                            localScale = (localScale * scaleFactor).coerceIn(0.5f, 2.5f)
                                         }
                                         
                                         dirty = true
                                     }
-                                    
-                                    // Reset for next gesture
-                                    accumulatedVerticalSwipe = 0f
                                 } else if (pointerCount == 1) {
                                     // Single finger: ONLY MOVE - no scaling
                                     val panChange = event.calculatePan()
