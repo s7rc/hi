@@ -35,6 +35,9 @@ android {
             res.srcDirs("src/androidMain/res")
             resources.srcDirs("src/commonMain/resources")
             java.srcDirs("src/commonMain/kotlin", "src/androidMain/kotlin")
+            
+            // Exclude haptics - uses multiplatform expect/actual
+            java.exclude("**/haptics/**")
         }
     }
 }
