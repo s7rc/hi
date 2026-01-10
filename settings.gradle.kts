@@ -85,8 +85,3 @@ if (usePlayDynamicFeatures()) {
     project(":lemuroid_core_yabause").projectDir = File("lemuroid-cores/lemuroid_core_yabause")
     project(":lemuroid_core_mednafen_saturn").projectDir = File("lemuroid-cores/lemuroid_core_mednafen_saturn")
 }
-
-// Include modified PadKit library locally
-include(":padkit")
-project(":padkit").projectDir = File(rootDir, "padkit-source/lib")
-
