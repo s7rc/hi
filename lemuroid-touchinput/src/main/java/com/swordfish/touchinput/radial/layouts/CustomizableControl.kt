@@ -145,35 +145,18 @@ fun CustomizableControl(
                                     // Reset for next gesture
                                     accumulatedVerticalSwipe = 0f
                                 } else if (pointerCount == 1) {
-                                    // Single finger: move button, swipe vertically to scale
-                                    val pointer = event.changes.first()
+                                    // Single finger: ONLY MOVE - no scaling
                                     val panChange = event.calculatePan()
                                     
-                                    // Initialize single-finger tracking
-                                    if (initialSingleFingerY == null) {
-                                        initialSingleFingerY = pointer.position.y
-                                    }
-                                    
-                                    // Calculate vertical swipe distance from initial touch
-                                    val currentY = pointer.position.y
-                                    val verticalDelta = currentY - (initialSingleFingerY ?: currentY)
-                                    
                                     if (panChange != androidx.compose.ui.geometry.Offset.Zero) {
-                                        // Always apply movement
+                                        // Only apply movement, no scaling at all
                                         localOffsetX += panChange.x
                                         localOffsetY += panChange.y
-                                        
-                                        // Only apply scale if significant vertical swipe (>10px threshold)
-                                        if (kotlin.math.abs(verticalDelta) > 10f) {
-                                            // Every 100 pixels of vertical swipe = 0.1 scale change
-                                            val scaleSensitivity = 0.001f
-                                            accumulatedVerticalSwipe = verticalDelta
-                                            val scaleChange = 1f + (accumulatedVerticalSwipe * scaleSensitivity)
-                                            localScale = (localScale * scaleChange).coerceIn(0.5f, 2.5f)
-                                        }
-                                        
                                         dirty = true
                                     }
+                                    
+                                    // Reset tracking when lifting finger
+                                    initialSingleFingerY = null
                                 }
                                 
                                 event.changes.forEach { 
