@@ -21,6 +21,9 @@ Fix joystick behavior with modified PadKit library
 - `libs/README.md` - Documentation (NEW)
 - `lemuroid-touchinput/build.gradle.kts` - Updated dependency configuration
 - `settings.gradle.kts` - Removed unused padkit-lib module
+- `buildSrc/src/main/java/deps.kt` - Updated androidx.activity to 1.9.0
+- `lemuroid-app/build.gradle.kts` - Made release signing conditional for CI
+- `.github/workflows/manual-build.yml` - Fixed step names and added release upload
 
 ### Testing
 Tested locally - joystick inner circle now properly moves within the outer circle boundary and reaches edges in all directions.

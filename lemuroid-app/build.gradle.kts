@@ -94,7 +94,14 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
-            signingConfig = signingConfigs["release"]
+            // Use release signing if keystore exists, otherwise fall back to debug (for CI)
+            val releaseKeystoreFile = file("$rootDir/release.jks")
+            signingConfig = if (releaseKeystoreFile.exists()) {
+                signingConfigs["release"]
+            } else {
+                println("WARNING: release.jks not found, using debug signing for release build")
+                signingConfigs["debug"]
+            }
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
             resValue("string", "lemuroid_name", "Lemuroid")
         }
