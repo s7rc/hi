@@ -12,6 +12,7 @@ Fix joystick behavior with modified PadKit library
 - Updated `lemuroid-touchinput/build.gradle.kts` to use local AAR
 - Removed `padkit-lib` module from `settings.gradle.kts`
 - Added PadKit's transitive dependencies manually
+- Updated `androidx.activity` from 1.7.2 to 1.9.0 (fixes enableEdgeToEdge errors)
 - Configured to work with GitHub Actions
 
 ### Files Modified
