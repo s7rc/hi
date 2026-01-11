@@ -214,47 +214,41 @@ class GameViewModelTouchControls(
         xAxis: Float,
         yAxis: Float,
     ) {
-        // Amplify sensitivity for more responsive inner circle movement
-        val sensitivityMultiplier = 1.5f
-        val amplifiedX = (xAxis * sensitivityMultiplier).coerceIn(-1f, 1f)
-        val amplifiedY = (yAxis * sensitivityMultiplier).coerceIn(-1f, 1f)
-        
-        // Standard DPAD handling for all systems including PC-FX
-        // beetle-pcfx core properly supports RETRO_DEVICE_ID_JOYPAD_LEFT/UP/DOWN/RIGHT
         when (id) {
             ComposeTouchLayouts.MOTION_SOURCE_DPAD -> {
-                retroGameView.retroGameView?.sendMotionEvent(GLRetroView.MOTION_SOURCE_DPAD, amplifiedX, amplifiedY)
+                retroGameView.retroGameView?.sendMotionEvent(GLRetroView.MOTION_SOURCE_DPAD, xAxis, yAxis)
             }
 
             ComposeTouchLayouts.MOTION_SOURCE_LEFT_STICK -> {
                 retroGameView.retroGameView?.sendMotionEvent(
                     MOTION_SOURCE_ANALOG_LEFT,
-                    amplifiedX,
-                    amplifiedY,
+                    xAxis,
+                    yAxis,
                 )
             }
 
             ComposeTouchLayouts.MOTION_SOURCE_RIGHT_STICK -> {
                 retroGameView.retroGameView?.sendMotionEvent(
                     MOTION_SOURCE_ANALOG_RIGHT,
-                    amplifiedX,
-                    amplifiedY,
+                    xAxis,
+                    yAxis,
                 )
             }
 
             ComposeTouchLayouts.MOTION_SOURCE_DPAD_AND_LEFT_STICK -> {
                 retroGameView.retroGameView?.sendMotionEvent(
                     MOTION_SOURCE_ANALOG_LEFT,
-                    amplifiedX,
-                    amplifiedY,
+                    xAxis,
+                    yAxis,
                 )
-                retroGameView.retroGameView?.sendMotionEvent(MOTION_SOURCE_DPAD, amplifiedX, amplifiedY)
+                retroGameView.retroGameView?.sendMotionEvent(MOTION_SOURCE_DPAD, xAxis, yAxis)
             }
 
             ComposeTouchLayouts.MOTION_SOURCE_RIGHT_DPAD -> {
                 retroGameView.retroGameView?.sendMotionEvent(
                     MOTION_SOURCE_ANALOG_RIGHT,
-                    normalizedY,
+                    xAxis,
+                    yAxis,
                 )
             }
         }
