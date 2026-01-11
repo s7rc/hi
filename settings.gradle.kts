@@ -18,12 +18,10 @@ include(
     ":lemuroid-app-ext-play",
     ":bundled-cores",
     ":baselineprofile",
-    ":beetle-pcfx",
-    ":padkit-lib"  // Using source code (AAR doesn't work for library modules)
+    ":beetle-pcfx"
 )
 
 project(":beetle-pcfx").projectDir = File("beetle-pcfx-libretro-master")
-project(":padkit-lib").projectDir = File("padkit-source/lib")
 
 project(":bundled-cores").projectDir = File("lemuroid-cores/bundled-cores")
 

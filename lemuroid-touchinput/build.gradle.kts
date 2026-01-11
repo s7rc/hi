@@ -43,10 +43,8 @@ dependencies {
     implementation(deps.libs.kotlin.serialization)
     implementation(deps.libs.kotlin.serializationJson)
 
-    // Use local modified PadKit source (AAR files don't work for library modules)
-    api(project(":padkit-lib"))
-    
-    // PadKit's transitive dependencies
+    // Use published PadKit (will use local Maven if available, otherwise remote)
+    api(deps.libs.padkit)
     api(deps.libs.collectionsImmutable)
 
     implementation(kotlin(deps.libs.kotlin.stdlib))

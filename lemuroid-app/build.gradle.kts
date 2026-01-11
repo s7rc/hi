@@ -146,6 +146,17 @@ android {
     }
 }
 
+// Replace the published PadKit dependency with our local modified AAR
+configurations.all {
+    resolutionStrategy {
+        dependencySubstitution {
+            substitute(module("io.github.swordfish90:padkit"))
+                .using(files("$rootDir/libs/lib-release.aar"))
+                .because("Using modified PadKit with joystick fix")
+        }
+    }
+}
+
 dependencies {
     implementation(project(":retrograde-util"))
     implementation(project(":retrograde-app-shared"))
