@@ -93,22 +93,12 @@ fun CustomizableControl(
                     .matchParentSize()
                     .pointerInput(buttonId) {
                         awaitEachGesture {
-                            val down = awaitFirstDown(
-                                pass = androidx.compose.ui.input.pointer.PointerEventPass.Initial,
-                                requireUnconsumed = false
-                            )
-                            down.consume()
+                            val down = awaitFirstDown()
                             
-                            var zoom = 1f
-                            var pan = androidx.compose.ui.geometry.Offset.Zero
                             var dirty = false
                             
-                            // Track initial position for single-finger swipe-to-scale
-                            var initialSingleFingerY: Float? = null
-                            var accumulatedVerticalSwipe = 0f
-                            
                             do {
-                                val event = awaitPointerEvent(androidx.compose.ui.input.pointer.PointerEventPass.Initial)
+                                val event = awaitPointerEvent()
                                 val pointerCount = event.changes.size
                                 
                                 if (pointerCount >= 2) {
