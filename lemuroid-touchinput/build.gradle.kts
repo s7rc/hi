@@ -43,14 +43,11 @@ dependencies {
     implementation(deps.libs.kotlin.serialization)
     implementation(deps.libs.kotlin.serializationJson)
 
-    // Use local modified PadKit AAR
-    api(files("../libs/lib-release.aar"))
+    // Use local modified PadKit source (AAR files don't work for library modules)
+    api(project(":padkit-lib"))
     
-    // PadKit's transitive dependencies (required when using AAR directly)
+    // PadKit's transitive dependencies
     api(deps.libs.collectionsImmutable)
-    implementation(deps.libs.androidx.compose.runtime)
-    implementation(deps.libs.androidx.compose.material3)
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
 
     implementation(kotlin(deps.libs.kotlin.stdlib))
 

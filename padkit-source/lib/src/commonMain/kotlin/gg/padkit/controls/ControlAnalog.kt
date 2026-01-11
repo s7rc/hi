@@ -59,7 +59,6 @@ fun PadKitScope.ControlAnalog(
     modifier: Modifier = Modifier,
     id: Id.ContinuousDirection,
     analogPressId: Id.Key? = null,
-    trackPointers: Boolean = true,  // Added: Controls whether joystick drags or follows finger
     foregroundSize: Float = 0.66f,
     background: @Composable () -> Unit = { DefaultControlBackground() },
     foreground: @Composable (State<Boolean>) -> Unit = {

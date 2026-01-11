@@ -59,13 +59,6 @@ internal class AnalogPointerHandler(
                 )
             }
             analogData.startPosition != Offset.Unspecified && currentlyDraggedPointer != null -> {
-                // Modified: Calculate position from joystick center (stored in startPosition)
-                // instead of delta from first touch point
-                //
-                // Original behavior: deltaPosition = touch - startTouch (drag mode)
-                // New behavior: deltaPosition = touch - joystickCenter (follow mode)
-                //
-                // This matches joystickcorrect.txt: position = (touchX - centerX) / radius
                 val deltaPosition =
                     Offset(
                         currentlyDraggedPointer.position.x - analogData.startPosition.x,
