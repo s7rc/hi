@@ -28,14 +28,16 @@ jobs:
       - name: Build Debug APK
         run: ./gradlew :lemuroid-app:assembleFreeBundleDebug 
 
-      - name: Build Release APK
-        run: ./gradlew :lemuroid-app:assembleFreeBundleRelease 
-
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
           name: lemuroid-app-free-bundle-debug
           path: lemuroid-app/build/outputs/apk/freeBundle/debug/lemuroid-app-free-bundle-debug.apk
+          
+      - name: Build Release APK
+        run: ./gradlew :lemuroid-app:assembleFreeBundleRelease 
+
+
 
       - name: Upload Release APK
         uses: actions/upload-artifact@v4
