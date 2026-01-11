@@ -1,0 +1,4 @@
+# Keep AAR files in this directory
+# These are modified PadKit builds that should be committed
+!*.aar
+!README.md
