@@ -128,9 +128,6 @@ fun CustomizableControl(
                                         localOffsetY += panChange.y
                                         dirty = true
                                     }
-                                    
-                                    // Reset tracking when lifting finger
-                                    initialSingleFingerY = null
                                 }
                                 
                                 event.changes.forEach { 
