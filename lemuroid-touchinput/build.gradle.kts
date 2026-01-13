@@ -43,9 +43,10 @@ dependencies {
     implementation(deps.libs.kotlin.serialization)
     implementation(deps.libs.kotlin.serializationJson)
 
-    // Use published PadKit (will use local Maven if available, otherwise remote)
-    api(deps.libs.padkit)
+    // Use local AAR directly to ensure ABI compatibility with the app
+    api(files("../libs/lib-release.aar"))
     api(deps.libs.collectionsImmutable)
+    api("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
 
     implementation(kotlin(deps.libs.kotlin.stdlib))
 

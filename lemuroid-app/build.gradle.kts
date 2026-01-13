@@ -147,23 +147,7 @@ android {
     }
 }
 
-// Replace the published PadKit dependency with our local modified AAR
-configurations.all {
-    exclude(group = "io.github.swordfish90", module = "padkit")
-}
-
-dependencies {
-    implementation(project(":retrograde-util"))
-    implementation(project(":retrograde-app-shared"))
-    implementation(project(":lemuroid-metadata-libretro-db"))
     implementation(project(":lemuroid-touchinput"))
-
-    // Add our modified PadKit AAR to replace the excluded one
-    implementation(files("$rootDir/libs/lib-release.aar"))
-    
-    // Transitive dependencies for PadKit (required since we're using AAR)
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
-    implementation(deps.libs.collectionsImmutable)
 
     "baselineProfile"(project(":baselineprofile"))
     implementation(deps.libs.androidx.profileInstaller)
