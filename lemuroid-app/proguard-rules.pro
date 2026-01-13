@@ -86,7 +86,16 @@
 ## LibretroDroid
 -keep class com.swordfish.libretrodroid.** { *; }
 
-## PadKit
+## PadKit (Aggressive Keep)
 -keep class gg.padkit.** { *; }
+-keep interface gg.padkit.** { *; }
+-keep enum gg.padkit.** { *; }
+-keepclassmembers class gg.padkit.** { *; }
+-keepattributes Signature,InnerClasses,EnclosingMethod,RuntimeVisibleAnnotations,RuntimeVisibleParameterAnnotations
+
+## Kotlinx Datetime & Collections
 -keep class kotlinx.datetime.** { *; }
 -keep class kotlinx.collections.immutable.** { *; }
+-dontwarn gg.padkit.**
+-dontwarn kotlinx.datetime.**
+-dontwarn kotlinx.collections.immutable.**
