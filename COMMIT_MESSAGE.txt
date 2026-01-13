@@ -23,6 +23,7 @@ Fix joystick behavior with modified PadKit library
 - `settings.gradle.kts` - Removed unused padkit-lib module
 - `buildSrc/src/main/java/deps.kt` - Updated androidx.activity to 1.9.0
 - `lemuroid-app/build.gradle.kts` - Made release signing conditional for CI
+- `lemuroid-app/build.gradle.kts` - Exclude published PadKit, add AAR + transitive dependencies manually
 - `.github/workflows/manual-build.yml` - Fixed step names and added release upload
 
 ### Testing

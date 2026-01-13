@@ -159,6 +159,10 @@ dependencies {
 
     // Add our modified PadKit AAR to replace the excluded one
     implementation(files("$rootDir/libs/lib-release.aar"))
+    
+    // Transitive dependencies for PadKit (required since we're using AAR)
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
+    implementation(deps.libs.collectionsImmutable)
 
     "baselineProfile"(project(":baselineprofile"))
     implementation(deps.libs.androidx.profileInstaller)

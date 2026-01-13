@@ -8,14 +8,22 @@ Added **dependency substitution** to `lemuroid-app/build.gradle.kts` that tells 
 ## The Magic Code
 
 ```kotlin
+// In lemuroid-app/build.gradle.kts
+dependencies {
+    // ... other deps
+    implementation(files("$rootDir/libs/lib-release.aar"))
+    
+    // REQUIRED: Add PadKit's dependencies manually 
+    // AARs don't automatically bring their transitive dependencies.
+    // These are the dependencies PadKit itself declares.
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
+    implementation(deps.libs.collectionsImmutable)
+}
+
+// In lemuroid-touchinput/build.gradle.kts (or wherever PadKit was originally declared)
+// Exclude the original PadKit to avoid conflicts
 configurations.all {
-    resolutionStrategy {
-        dependencySubstitution {
-            substitute(module("io.github.swordfish90:padkit"))
-                .using(files("$rootDir/libs/lib-release.aar"))
-                .because("Using modified PadKit with joystick fix")
-        }
-    }
+    exclude(group = "io.github.swordfish90", module = "padkit")
 }
 ```
 
