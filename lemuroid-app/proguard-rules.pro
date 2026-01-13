@@ -85,3 +85,8 @@
 
 ## LibretroDroid
 -keep class com.swordfish.libretrodroid.** { *; }
+
+## PadKit
+-keep class gg.padkit.** { *; }
+-keep class kotlinx.datetime.** { *; }
+-keep class kotlinx.collections.immutable.** { *; }
