@@ -93,7 +93,8 @@ android {
 
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = true
+            // Disable minification to prevent R8 from stripping PadKit classes
+            isMinifyEnabled = false
             // Use release signing if keystore exists, otherwise fall back to debug (for CI)
             val releaseKeystoreFile = file("$rootDir/release.jks")
             signingConfig = if (releaseKeystoreFile.exists()) {

@@ -9,16 +9,22 @@ Added **dependency substitution** to `lemuroid-app/build.gradle.kts` that tells 
 
 ```kotlin
 // In lemuroid-app/build.gradle.kts
-dependencies {
-    // ... other deps
-    implementation(files("$rootDir/libs/lib-release.aar"))
-    
-    // REQUIRED: Add PadKit's dependencies manually 
-    // AARs don't automatically bring their transitive dependencies.
-    // These are the dependencies PadKit itself declares.
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
-    implementation(deps.libs.collectionsImmutable)
+buildTypes {
+    getByName("release") {
+        isMinifyEnabled = false // ⚠️ IMPORTANT: Disabled to prevent R8 stripping
+        // ...
+    }
 }
+```
+
+## Why Minification is Disabled
+
+We disabled `isMinifyEnabled` for release because R8 (the code shrinker) was aggressively stripping PadKit classes despite our best efforts with ProGuard rules.
+
+Disabling it:
+- ✅ **Guarantees** the code runs exactly like Debug
+- ✅ Prevents "ClassNotFound" or "resolution failed" crashes
+- ⚠️ Increases APK size slightly (negligible for personal builds)
 
 // In lemuroid-touchinput/build.gradle.kts (or wherever PadKit was originally declared)
 // Exclude the original PadKit to avoid conflicts
