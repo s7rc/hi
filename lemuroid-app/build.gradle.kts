@@ -147,6 +147,12 @@ android {
     }
 }
 
+}
+
+dependencies {
+    implementation(project(":retrograde-util"))
+    implementation(project(":retrograde-app-shared"))
+    implementation(project(":lemuroid-metadata-libretro-db"))
     implementation(project(":lemuroid-touchinput"))
 
     "baselineProfile"(project(":baselineprofile"))
