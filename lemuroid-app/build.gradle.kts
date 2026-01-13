@@ -148,13 +148,7 @@ android {
 
 // Replace the published PadKit dependency with our local modified AAR
 configurations.all {
-    resolutionStrategy {
-        dependencySubstitution {
-            substitute(module("io.github.swordfish90:padkit"))
-                .using(files("$rootDir/libs/lib-release.aar"))
-                .because("Using modified PadKit with joystick fix")
-        }
-    }
+    exclude(group = "io.github.swordfish90", module = "padkit")
 }
 
 dependencies {
@@ -162,6 +156,9 @@ dependencies {
     implementation(project(":retrograde-app-shared"))
     implementation(project(":lemuroid-metadata-libretro-db"))
     implementation(project(":lemuroid-touchinput"))
+
+    // Add our modified PadKit AAR to replace the excluded one
+    implementation(files("$rootDir/libs/lib-release.aar"))
 
     "baselineProfile"(project(":baselineprofile"))
     implementation(deps.libs.androidx.profileInstaller)
