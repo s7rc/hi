@@ -43,8 +43,10 @@ dependencies {
     implementation(deps.libs.kotlin.serialization)
     implementation(deps.libs.kotlin.serializationJson)
 
-    // Use local AAR directly to ensure ABI compatibility with the app
-    api(files("../libs/lib-release.aar"))
+    // Use extracted JAR for compilation (Gradle allows .jar in libs, but not .aar)
+    compileOnly(files("../libs/padkit-classes.jar"))
+    
+    // Dependencies required by PadKit
     api(deps.libs.collectionsImmutable)
     api("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
 

@@ -23,8 +23,8 @@ Fix joystick behavior with modified PadKit library
 - `settings.gradle.kts` - Removed unused padkit-lib module
 - `buildSrc/src/main/java/deps.kt` - Updated androidx.activity to 1.9.0
 - .github/workflows/manual-build.yml - Fix step names and add release upload
-- lemuroid-touchinput/build.gradle.kts - Use local AAR + Export dependencies (api)
-- lemuroid-app/build.gradle.kts - Disable minification for release to prevent R8 stripping
+- lemuroid-touchinput/build.gradle.kts - Use extracted JAR logic to bypass AAR restriction
+- lemuroid-app/build.gradle.kts - Add AAR runtime dependency + Disable minification
 - `lemuroid-app/proguard-rules.pro` - Added rules to keep PadKit and its dependencies from being stripped
 - `.github/workflows/manual-build.yml` - Fixed step names and added release upload
 
