@@ -2,3 +2,4 @@
 # These are modified PadKit builds that should be committed
 !*.aar
 !README.md
+lib-debug.aar
