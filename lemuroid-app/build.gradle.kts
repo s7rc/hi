@@ -156,7 +156,7 @@ dependencies {
     implementation(project(":lemuroid-touchinput"))
 
     // Provide the PadKit AAR at runtime (required because library uses compileOnly)
-    implementation(files("$rootDir/libs/lib-release.aar"))
+    implementation(fileTree(mapOf("dir" to "$rootDir/libs", "include" to listOf("*.aar"))))
 
     "baselineProfile"(project(":baselineprofile"))
     implementation(deps.libs.androidx.profileInstaller)
