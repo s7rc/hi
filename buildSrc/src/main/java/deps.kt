@@ -174,3 +174,4 @@ object deps {
         const val kotlinGradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
     }
 }
+        const val padkit = "io.github.s7rc:padkit:b5d29ff"

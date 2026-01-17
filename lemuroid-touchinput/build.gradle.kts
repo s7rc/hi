@@ -44,7 +44,7 @@ dependencies {
     implementation(deps.libs.kotlin.serializationJson)
 
     // Use extracted JAR for compilation (Gradle allows .jar in libs, but not .aar)
-    compileOnly(files("../libs/padkit-classes.jar"))
+    api("io.github.s7rc:padkit:VERSION_HERE")
     
     // Dependencies required by PadKit
     api(deps.libs.collectionsImmutable)
