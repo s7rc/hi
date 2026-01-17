@@ -43,12 +43,18 @@ dependencies {
     implementation(deps.libs.kotlin.serialization)
     implementation(deps.libs.kotlin.serializationJson)
 
+<<<<<<< HEAD
     // Use extracted JAR for compilation (Gradle allows .jar in libs, but not .aar)
     api("io.github.s7rc:padkit:VERSION_HERE")
     
     // Dependencies required by PadKit
     api(deps.libs.collectionsImmutable)
     api("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
+=======
+
+    api(deps.libs.padkit)  // Use published version - local build too complex
+    api(deps.libs.collectionsImmutable)
+>>>>>>> parent of 03fdc5e (j)
 
     implementation(kotlin(deps.libs.kotlin.stdlib))
 

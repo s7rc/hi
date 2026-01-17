@@ -100,17 +100,13 @@ fun PadKitScope.ControlAnalog(
                 position.ifUnspecified { Offset.Zero },
             )
 
-        // Calculate max offset based on the ring width between background and foreground
-        // This ensures the inner circle stays within the outer circle boundary
-        val maxOffsetFraction = (1f - foregroundSize) / 2f
-
         Box(
             modifier =
                 Modifier
                     .fillMaxSize(foregroundSize)
                     .offset(
-                        maxWidth * safePosition.x * maxOffsetFraction,
-                        -maxHeight * safePosition.y * maxOffsetFraction,
+                        maxWidth * safePosition.x * 0.25f,
+                        -maxHeight * safePosition.y * 0.25f,
                     ),
         ) {
             foreground(pressedState)
