@@ -155,8 +155,6 @@ dependencies {
     implementation(project(":lemuroid-metadata-libretro-db"))
     implementation(project(":lemuroid-touchinput"))
 
-    // Provide the PadKit AAR at runtime (required because library uses compileOnly)
-
     "baselineProfile"(project(":baselineprofile"))
     implementation(deps.libs.androidx.profileInstaller)
 

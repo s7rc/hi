@@ -165,6 +165,7 @@ object deps {
         const val composeHtmlText          = "de.charlex.compose.material3:material3-html-text:2.0.0-beta01"
         const val collectionsImmutable     = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.8"
         const val libretrodroid            = "com.github.Swordfish90:LibretroDroid:${versions.libretrodroid}"
+        const val padkit                   = "io.github.s7rc:padkit:b5d29ff"
 //        const val libretrodroid            = "com.swordfish:libretrodroid:unspecified"
     }
 
@@ -174,4 +175,3 @@ object deps {
         const val kotlinGradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
     }
 }
-        const val padkit = "io.github.s7rc:padkit:b5d29ff"
